@@ -11,7 +11,7 @@ int main(void) {
     free(b);
     return 1;
   }
-
+  printf("Tokens:\n");
   if (num > 0 && b[num - 1] == '\n') {
     b[num - 1] = '\0';
   }
