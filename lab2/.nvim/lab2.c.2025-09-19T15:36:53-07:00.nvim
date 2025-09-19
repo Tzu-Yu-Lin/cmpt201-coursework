@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <wait.h>
+
+int main(int argc, char **argv) {
+    (void)argc; (void)argv;
+
+    char *line = NULL;
+    size_t n;
+
+    for (;;) {
+        printf("Please enter a command:\n");
+        ssize_t len = getline(&line, &n, stdin);
+        
+        if (len == -1) {
+            perror("Failed to read line!\n");
+            break;
+        }
+
+        // Remove the newline character if it exists
+        if (line[len - 1] == '\n') {
+            line[len - 1] = '\0';
+        }
+
+        // If the user enters an empty line, continue asking for input
+        if (len == 1) {
+            continue;
+        }
+
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror("Failed to fork!\n");
+            break;
+        } else if (pid == 0) {
+            // In child process, execute the command
+            if (execlp(line, line, (char *)NULL) == -1) {
+                perror("Exec failure");
+                exit(1);  // Exit child process on failure
+            }
+        } else {
+            // In parent process, wait for child to finish
+            int status;
+            waitpid(pid, &status, 0);
+        }
+    }
+
+    free(line);  // Free the allocated memory for the line
+    return 0;
+}
+
+
+
+
