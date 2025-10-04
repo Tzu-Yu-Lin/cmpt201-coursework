@@ -18,6 +18,7 @@ void handle_error(const char *msg) {
   exit(EXIT_FAILURE);
 }
 
+
 void print_out(char *format, void *data, size_t data_size) {
   char buf[BUF_SIZE];
   ssize_t len = snprintf(buf, BUF_SIZE, format,
@@ -52,6 +53,7 @@ int main(void) {
 
   struct header *first_block = (struct header *)heap_start;
   struct header *second_block = (struct header *)(heap_start + BLOCK_SIZE);
+
 
   initialize_block(first_block, BLOCK_SIZE, NULL, 0);
   initialize_block(second_block, BLOCK_SIZE, first_block, 1);
